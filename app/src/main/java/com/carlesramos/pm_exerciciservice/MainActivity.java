@@ -1,6 +1,7 @@
 package com.carlesramos.pm_exerciciservice;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.content.BroadcastReceiver;
@@ -46,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
         IntentFilter filter = new IntentFilter();
         filter.addAction(NumerosPrimosService.DAME_PRIMOS);
         PrimosReciver primosReciver = new PrimosReciver();
-        registerReceiver(primosReciver,filter);
+        LocalBroadcastManager.getInstance(this).registerReceiver(primosReciver, filter);
 
         btConsultar.setOnClickListener(new View.OnClickListener() {
             @Override

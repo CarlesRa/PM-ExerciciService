@@ -38,7 +38,7 @@ public class PrimoAdapter extends RecyclerView.Adapter<PrimoAdapter.PrimoViewHol
         return numerosPrimos.size();
     }
 
-    public class PrimoViewHolder extends RecyclerView.ViewHolder{
+    public static class PrimoViewHolder extends RecyclerView.ViewHolder{
         private TextView tvNumPrimos;
         public PrimoViewHolder(@NonNull View itemView, Context context) {
             super(itemView);
