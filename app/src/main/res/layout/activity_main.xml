@@ -15,6 +15,12 @@
         android:layout_marginTop="20dp"
         android:text="@string/bt_consulta" />
 
+    <Button
+        android:id="@+id/btSave"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/save_data" />
+
     <TextView
         android:id="@+id/tvCantidadPrimos"
         android:layout_width="wrap_content"

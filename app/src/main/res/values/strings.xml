@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">PM-ExerciciService</string>
     <string name="bt_consulta">CONSULT</string>
+    <string name="save_data">SAVE DATA</string>
 </resources>

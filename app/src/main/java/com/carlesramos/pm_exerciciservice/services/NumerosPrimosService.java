@@ -8,12 +8,6 @@ import java.util.ArrayList;
 public class NumerosPrimosService extends IntentService {
 
     public static final String DAME_PRIMOS = "com.carlesramos.dameprimos";
-    private final int GET_COUNT = 0;
-    private Thread erCurrante = null;
-    private ArrayList<Integer> numerosPrimos = new ArrayList<>();
-    private int cantidadPrimos = 0;
-    private int posiblesPrimos = 1;
-    private int contador = 0;
 
     public NumerosPrimosService() {
         super("ServiciosPrimo");
@@ -22,24 +16,35 @@ public class NumerosPrimosService extends IntentService {
 
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
+
+        ArrayList<Integer> numerosPrimos = new ArrayList<>();
+        int posiblesPrimos = 1;
+        int cantidadPrimos = 0;
+        int contador = 0;
+
         while (true) {
+
             posiblesPrimos += 2;
+
             for (int i = 1; i <= posiblesPrimos; i++) {
 
                 if (posiblesPrimos % i == 0) {
                     contador++;
                 }
             }
+
             if (contador == 2) {
-                Intent bcIntent = new Intent();
+
                 cantidadPrimos++;
+                Intent bcIntent = new Intent();
+                numerosPrimos.add(posiblesPrimos);
                 bcIntent.setAction(DAME_PRIMOS);
                 bcIntent.putExtra("cant",cantidadPrimos);
                 bcIntent.putExtra("primos",numerosPrimos);
                 sendBroadcast(bcIntent);
-                numerosPrimos.add(posiblesPrimos);
-                Log.i("NumPrimo: ", String.valueOf(posiblesPrimos));
+
             }
+
             contador = 0;
         }
     }
