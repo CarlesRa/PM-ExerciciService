@@ -2,35 +2,21 @@ package com.carlesramos.pm_exerciciservice;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import android.Manifest;
 import android.content.BroadcastReceiver;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.ServiceConnection;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Environment;
-import android.os.IBinder;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.carlesramos.pm_exerciciservice.adapters.PrimoAdapter;
 import com.carlesramos.pm_exerciciservice.services.NumerosPrimosService;
-
-import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 
@@ -92,11 +78,13 @@ public class MainActivity extends AppCompatActivity {
                     for (int i=0; i<numerosPrimos.size(); i++){
                         writer.write((numerosPrimos.get(i).toString() + "\n"));
                     }
+
                     writer.close();
                     outputStream.close();
                     Toast.makeText(MainActivity.this, "Data has been saved!!", Toast.LENGTH_SHORT).show();
+
                 } catch (IOException e) {
-                    Toast.makeText(MainActivity.this, "Error saving data", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, "Error saving data...", Toast.LENGTH_SHORT).show();
                 }
             }
         });

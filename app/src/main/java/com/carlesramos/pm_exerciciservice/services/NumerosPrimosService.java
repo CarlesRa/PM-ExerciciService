@@ -1,7 +1,6 @@
 package com.carlesramos.pm_exerciciservice.services;
 import android.app.IntentService;
 import android.content.Intent;
-import android.util.Log;
 import androidx.annotation.Nullable;
 import java.util.ArrayList;
 
