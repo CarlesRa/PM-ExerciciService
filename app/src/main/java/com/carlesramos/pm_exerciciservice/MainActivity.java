@@ -5,10 +5,13 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -30,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
     private NumerosPrimosService myService;
     private int cantidadPrimos;
     private Button btSave;
+    private boolean isBinded;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,21 +43,17 @@ public class MainActivity extends AppCompatActivity {
         rvListadoPrimos = findViewById(R.id.rvListaPrimos);
         btConsultar = findViewById(R.id.btConsultar);
         tvCantidadPrimos = findViewById(R.id.tvCantidadPrimos);
-        myService = null;
         btSave = findViewById(R.id.btSave);
 
-        Intent intent = new Intent(this, NumerosPrimosService.class);
-        startService(intent);
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(NumerosPrimosService.DAME_PRIMOS);
-        PrimosReciver primosReciver = new PrimosReciver();
-        LocalBroadcastManager.getInstance(this).registerReceiver(primosReciver, filter);
+        final Intent intent = new Intent(this, NumerosPrimosService.class);
+        bindService(intent, connection, Context.BIND_AUTO_CREATE);
+
 
         btConsultar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                tvCantidadPrimos.setText(String.valueOf(cantidadPrimos));
-                rvListadoPrimos.setAdapter(new PrimoAdapter(numerosPrimos, MainActivity.this));
+                tvCantidadPrimos.setText(String.valueOf(myService.getNumerosPrimos().size()));
+                rvListadoPrimos.setAdapter(new PrimoAdapter(myService.getNumerosPrimos(), MainActivity.this));
                 rvListadoPrimos.setHasFixedSize(true);
                 rvListadoPrimos.setLayoutManager(new GridLayoutManager(MainActivity.this,5));
             }
@@ -76,8 +76,8 @@ public class MainActivity extends AppCompatActivity {
                     FileOutputStream outputStream = new FileOutputStream(file);
                     OutputStreamWriter writer = new OutputStreamWriter(outputStream);
 
-                    for (int i=0; i<numerosPrimos.size(); i++){
-                        writer.write((numerosPrimos.get(i).toString() + "\n"));
+                    for (int i=0; i<myService.getNumerosPrimos().size(); i++){
+                        writer.write((myService.getNumerosPrimos().get(i).toString() + "\n"));
                     }
 
                     writer.close();
@@ -91,12 +91,23 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public class PrimosReciver extends BroadcastReceiver{
+    public ServiceConnection connection = new ServiceConnection() {
         @Override
-        public void onReceive(Context context, Intent intent) {
-            cantidadPrimos = intent.getIntExtra("cant",0);
-            numerosPrimos = intent.getIntegerArrayListExtra("primos");
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            NumerosPrimosService.LocalBinder binder = (NumerosPrimosService.LocalBinder)service;
+            myService = binder.getService();
+            isBinded = true;
         }
-    }
 
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            isBinded = false;
+        }
+    };
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unbindService(connection);
+    }
 }
